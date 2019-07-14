@@ -18,6 +18,24 @@ class Task(db.Model):
         self.name = name 
         self.completed = False
 
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(120))
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -31,6 +49,7 @@ def index():
 
     tasks = Task.query.filter_by(completed=False).all()
     completed_tasks = Task.query.filter_by(completed=True).all()
+    
     return render_template("todos.html", title="Get It Done!", 
     tasks=tasks, completed_tasks=completed_tasks)
 
